@@ -3,9 +3,14 @@ package com.example.mymapsapp;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import android.Manifest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import android.content.pm.PackageManager;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,8 +44,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng location = new LatLng(30.4515, 91.1871);
-        mMap.addMarker(new MarkerOptions().position(location).title("Marker in Baton Rouge"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        LatLng locationw = new LatLng(30.4515, -91.1871);
+        mMap.addMarker(new MarkerOptions().position(locationw).title("Marker in Baton Rouge"));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(locationw));
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+           Log.d("MyMaps", "Failed Permission check 1");
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+       }
+      if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+           Log.d("MyMaps", "Failed Permission check 2");
+           ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+       }
+
+       if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+           ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            mMap.setMyLocationEnabled(true);
     }
+
 }
